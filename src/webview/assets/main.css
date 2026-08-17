@@ -71,17 +71,10 @@ input:focus-visible {
   outline-offset: -1px;
 }
 
-/* Tiptap Editor Styles */
-.ProseMirror {
-  outline: none;
-}
-
-.ProseMirror p.is-editor-empty:first-child::before {
-  content: attr(data-placeholder);
-  float: left;
-  color: var(--vscode-input-placeholderForeground);
-  pointer-events: none;
-  height: 0;
+/* MDXEditor CSS variable overrides */
+.mdxeditor {
+  --mdxeditor-font-family: inherit;
+  --mdxeditor-text-color: var(--vscode-editor-foreground);
 }
 
 /* Prose (markdown) styling for editor */
@@ -266,10 +259,7 @@ input:focus-visible {
   background-color: var(--vscode-editor-inactiveSelectionBackground, rgba(127, 127, 127, 0.1));
 }
 
-/* Selection styling */
-.ProseMirror ::selection {
-  background-color: var(--vscode-editor-selectionBackground, rgba(59, 130, 246, 0.3));
-}
+
 
 /* Strikethrough */
 .prose s,
