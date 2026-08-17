@@ -410,6 +410,57 @@ function App(): React.JSX.Element {
 
   return (
     <div className="h-full w-full flex flex-col bg-[var(--vscode-editor-background)]">
+      <style dangerouslySetInnerHTML={{ __html: `
+        /* MDXEditor CSS variable overrides */
+        body, .mdxeditor, .dark-theme, .light-theme, :root {
+          --mdxeditor-font-family: inherit !important;
+          --mdxeditor-text-color: var(--vscode-editor-foreground, #cccccc) !important;
+          --basePageBg: transparent !important;
+          --baseBase: transparent !important;
+          --baseBg: var(--vscode-dropdown-background, #3c3c3c) !important;
+          --baseBgSubtle: var(--vscode-dropdown-background, #3c3c3c) !important;
+          --baseBgHover: var(--vscode-list-hoverBackground, #2a2d2e) !important;
+          --baseBgActive: var(--vscode-list-activeSelectionBackground, #04395e) !important;
+          --baseBorder: var(--vscode-panel-border, #444444) !important;
+          --baseBorderHover: var(--vscode-disabledForeground, #888888) !important;
+          --baseText: var(--vscode-dropdown-foreground, #f0f0f0) !important;
+          --baseTextContrast: var(--vscode-editor-foreground, #cccccc) !important;
+          --accentBase: var(--vscode-button-background, #0e639c) !important;
+          --accentBg: var(--vscode-button-background, #0e639c) !important;
+          --accentText: var(--vscode-button-foreground, #ffffff) !important;
+        }
+
+        /* Radix Dropdown overrides */
+        [data-radix-popper-content-wrapper] * {
+          background-color: var(--vscode-dropdown-background, #3c3c3c) !important;
+          color: var(--vscode-dropdown-foreground, #f0f0f0) !important;
+          border-color: var(--vscode-dropdown-border, #454545) !important;
+        }
+        [data-radix-popper-content-wrapper] > div {
+          border: 1px solid var(--vscode-dropdown-border, #454545) !important;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+        }
+        [data-radix-popper-content-wrapper] [data-highlighted] {
+          background-color: var(--vscode-list-activeSelectionBackground, #04395e) !important;
+          color: var(--vscode-list-activeSelectionForeground, #ffffff) !important;
+        }
+        [data-radix-popper-content-wrapper] div[role="option"] {
+          background-color: transparent !important;
+        }
+        
+        /* Dropdown Trigger boundaries inside toolbar */
+        .mdxeditor [role="toolbar"] button[role="combobox"] {
+          background-color: var(--vscode-dropdown-background, #3c3c3c) !important;
+          border: 1px solid var(--vscode-dropdown-border, #454545) !important;
+          border-radius: 4px !important;
+          margin: 0 4px !important;
+        }
+        
+        /* Make toolbar background transparent so it doesn't look like a thick border */
+        .mdxeditor [role="toolbar"] {
+          background-color: transparent !important;
+        }
+      `}} />
       <Toolbar
         onOpenSettings={() => vscode.postMessage({ type: 'openSettings' })}
         onOpenColumnManager={() => setColumnManagerOpen(true)}
