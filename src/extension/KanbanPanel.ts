@@ -1142,7 +1142,10 @@ export class KanbanPanel {
       fontSizeCardMeta: config.get<string>('fontSizeCardMeta', '11px'),
       fontSizeEditorHeader: config.get<string>('fontSizeEditorHeader', '20px'),
       fontSizeEditorBody: config.get<string>('fontSizeEditorBody', '13px'),
-      fontSizeEditorMeta: config.get<string>('fontSizeEditorMeta', '12px')
+      fontSizeEditorMeta: config.get<string>('fontSizeEditorMeta', '12px'),
+      defaultEditorMode: config.get<'rich-text' | 'raw'>('defaultEditorMode', 'rich-text'),
+      showLineNumbersInRawMode: config.get<boolean>('showLineNumbersInRawMode', true),
+      editorToolbarHeight: config.get<number>('editorToolbarHeight', 32)
     }
 
     const collapsedColumns: string[] = this._context.workspaceState.get('kanban-sauce.collapsedColumns', [])

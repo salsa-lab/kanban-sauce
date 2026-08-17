@@ -14,7 +14,6 @@ import {
   codeBlockPlugin,
   imagePlugin,
   toolbarPlugin,
-  UndoRedo,
   BoldItalicUnderlineToggles,
   StrikeThroughSupSubToggles,
   CodeToggle,
@@ -24,7 +23,9 @@ import {
   InsertTable,
   InsertThematicBreak,
   InsertCodeBlock,
-  InsertImage
+  InsertImage,
+  diffSourcePlugin,
+  DiffSourceToggleWrapper
 } from '@mdxeditor/editor'
 import '@mdxeditor/editor/style.css'
 import { X, ChevronDown, User, Tag, Check, CircleDot, Signal, Calendar, Layers } from 'lucide-react'
@@ -500,6 +501,14 @@ function CreateFeatureDialogContent({
             <MDXEditor
               markdown={localContent}
               onChange={(val) => setLocalContent(val.replace(/\n{3,}/g, '\n\n'))}
+              translation={(key, defaultValue, interpolations) => {
+                if (key === 'toolbar.source') return 'Raw mode';
+                if (!interpolations) return defaultValue;
+                return Object.entries(interpolations).reduce(
+                  (acc, [k, v]) => acc.replace(new RegExp(`{{\\s*${k}\\s*}}`, 'g'), String(v)),
+                  defaultValue
+                );
+              }}
               contentEditableClassName="prose prose-sm dark:prose-invert max-w-none focus:outline-none min-h-[200px] p-4"
               plugins={[
                 headingsPlugin(),
@@ -514,21 +523,26 @@ function CreateFeatureDialogContent({
                 imagePlugin(),
                 toolbarPlugin({
                   toolbarContents: () => (
-                    <div className="flex items-center gap-1 overflow-x-auto w-full flex-wrap py-1">
-                      <UndoRedo />
-                      <BoldItalicUnderlineToggles />
-                      <StrikeThroughSupSubToggles />
-                      <CodeToggle />
-                      <BlockTypeSelect />
-                      <CreateLink />
-                      <ListsToggle />
-                      <InsertTable />
-                      <InsertThematicBreak />
-                      <InsertCodeBlock />
-                      <InsertImage />
-                    </div>
+                    <DiffSourceToggleWrapper 
+                      options={['rich-text', 'source']}
+                      SourceToolbar={<span className="text-sm font-medium ml-2 text-[var(--vscode-foreground)]">Raw mode</span>}
+                    >
+                      <div className="flex items-center gap-1 overflow-x-auto overflow-y-hidden w-full flex-nowrap py-1">
+                        <BoldItalicUnderlineToggles />
+                        <StrikeThroughSupSubToggles />
+                        <CodeToggle />
+                        <BlockTypeSelect />
+                        <CreateLink />
+                        <ListsToggle />
+                        <InsertTable />
+                        <InsertThematicBreak />
+                        <InsertCodeBlock />
+                        <InsertImage />
+                      </div>
+                    </DiffSourceToggleWrapper>
                   )
-                })
+                }),
+                diffSourcePlugin({ viewMode: cardSettings.defaultEditorMode === 'raw' ? 'source' : 'rich-text' })
               ]}
             />
           </div>

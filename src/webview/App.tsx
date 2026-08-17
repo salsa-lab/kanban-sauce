@@ -456,9 +456,106 @@ function App(): React.JSX.Element {
           margin: 0 4px !important;
         }
         
-        /* Make toolbar background transparent so it doesn't look like a thick border */
+        /* Make toolbar opaque so scrolling text doesn't show through, but match editor background */
         .mdxeditor [role="toolbar"] {
+          background-color: var(--vscode-editor-background) !important;
+          z-index: 10 !important;
+          ${cardSettings.editorToolbarHeight ? `
+            height: ${cardSettings.editorToolbarHeight}px !important;
+            min-height: ${cardSettings.editorToolbarHeight}px !important;
+            max-height: ${cardSettings.editorToolbarHeight}px !important;
+            padding: 0 8px !important;
+            overflow-y: hidden !important;
+            scrollbar-width: none !important;
+          ` : ''}
+        }
+        ${cardSettings.editorToolbarHeight ? `
+        .mdxeditor [role="toolbar"] > div::-webkit-scrollbar {
+          display: none !important;
+        }
+        .mdxeditor [role="toolbar"] > div {
+          height: 100% !important;
+          display: flex !important;
+          align-items: center !important;
+          scrollbar-width: none !important;
+          -ms-overflow-style: none !important;
+        }
+        .mdxeditor [role="toolbar"] button,
+        .mdxeditor [role="toolbar"] [role="combobox"],
+        .mdxeditor [role="toolbar"] [data-toolbar-item],
+        .mdxeditor [class*="selectTrigger"] {
+          height: ${Math.max(16, cardSettings.editorToolbarHeight - 4)}px !important;
+          width: auto !important;
+          padding: 0 4px !important;
+          min-width: unset !important;
+          font-size: ${Math.max(10, cardSettings.editorToolbarHeight - 14)}px !important;
+          line-height: 1 !important;
+          display: inline-flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+        }
+        .mdxeditor [role="toolbar"] button *,
+        .mdxeditor [role="toolbar"] [role="combobox"] *,
+        .mdxeditor [role="toolbar"] [data-toolbar-item] *,
+        .mdxeditor [class*="selectTrigger"] *,
+        .mdxeditor [role="toolbar"] button span,
+        .mdxeditor [role="toolbar"] span {
+          font-size: ${Math.max(10, cardSettings.editorToolbarHeight - 14)}px !important;
+          line-height: 1 !important;
+        }
+        .mdxeditor [role="toolbar"] button,
+        .mdxeditor [role="toolbar"] [role="combobox"] {
+          height: ${Math.max(16, cardSettings.editorToolbarHeight - 4)}px !important;
+          width: auto !important;
+          padding: 0 4px !important;
+          min-width: unset !important;
+          display: inline-flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+        }
+        .mdxeditor [role="toolbar"] button *,
+        .mdxeditor [role="toolbar"] [role="combobox"] * {
+          font-size: ${Math.max(10, cardSettings.editorToolbarHeight - 14)}px !important;
+          line-height: 1 !important;
+        }
+        .mdxeditor [role="toolbar"] button svg {
+          height: ${Math.max(10, cardSettings.editorToolbarHeight - 14)}px !important;
+          width: auto !important;
+        }
+        .mdxeditor [role="toolbar"] div[role="separator"] {
+          height: ${Math.max(10, cardSettings.editorToolbarHeight - 14)}px !important;
+          margin: 0 4px !important;
+        }
+        .mdxeditor .mdxeditor-select-content div,
+        .mdxeditor .mdxeditor-select-content span {
+          font-size: ${Math.max(10, cardSettings.editorToolbarHeight - 14)}px !important;
+          padding-top: 2px !important;
+          padding-bottom: 2px !important;
+          min-height: unset !important;
+        }
+        ` : ''}
+        
+        /* Source Mode Editor (CodeMirror) */
+        .mdxeditor-source-editor .cm-editor, .mdxeditor-source-editor .cm-scroller {
+          background-color: var(--vscode-editor-background) !important;
+          color: var(--vscode-editor-foreground) !important;
+          font-family: var(--vscode-editor-font-family, monospace) !important;
+          font-size: var(--vscode-editor-font-size, 14px) !important;
+        }
+        .mdxeditor-source-editor .cm-gutters {
+          background-color: var(--vscode-editor-background) !important;
+          color: var(--vscode-editorLineNumber-foreground, #858585) !important;
+          border-right: 1px solid var(--vscode-panel-border) !important;
+          font-family: var(--vscode-editor-font-family, monospace) !important;
+          font-size: var(--vscode-editor-font-size, 14px) !important;
+          ${cardSettings.showLineNumbersInRawMode === false ? 'display: none !important;' : ''}
+        }
+        .mdxeditor-source-editor .cm-activeLineGutter {
           background-color: transparent !important;
+          color: var(--vscode-editorLineNumber-activeForeground, #c6c6c6) !important;
+        }
+        .mdxeditor-source-editor .cm-activeLine {
+          background-color: var(--vscode-editor-lineHighlightBackground, rgba(255, 255, 255, 0.05)) !important;
         }
       `}} />
       <Toolbar

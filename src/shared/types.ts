@@ -90,6 +90,9 @@ export interface CardDisplaySettings {
   fontSizeEditorHeader?: string
   fontSizeEditorBody?: string
   fontSizeEditorMeta?: string
+  defaultEditorMode: 'rich-text' | 'raw'
+  showLineNumbersInRawMode: boolean
+  editorToolbarHeight: number
 }
 
 // Messages between extension and webview

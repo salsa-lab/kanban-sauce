@@ -408,6 +408,22 @@
           "default": false,
           "description": "%config.compactMode.description%"
         },
+        "kanban-sauce.defaultEditorMode": {
+          "type": "string",
+          "enum": ["rich-text", "raw"],
+          "default": "rich-text",
+          "description": "Default view mode for the feature editor."
+        },
+        "kanban-sauce.showLineNumbersInRawMode": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable or disable line numbers in the raw markdown editor."
+        },
+        "kanban-sauce.editorToolbarHeight": {
+          "type": "number",
+          "default": 32,
+          "description": "Height in pixels of the MDX editor toolbar. Adjust this to make the toolbar thicker or thinner."
+        },
         "kanban-sauce.addNewCardsToTop": {
           "type": "boolean",
           "default": false,

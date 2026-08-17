@@ -108,9 +108,32 @@ body, .mdxeditor, .dark-theme, .light-theme, :root {
   margin: 0 4px !important;
 }
 
-/* Make toolbar background transparent so it doesn't look like a thick border */
+/* Make toolbar opaque so scrolling text doesn't show through, but match editor background */
 .mdxeditor [role="toolbar"] {
+  background-color: var(--vscode-editor-background) !important;
+  z-index: 10 !important;
+}
+
+/* Source Mode Editor (CodeMirror) */
+.mdxeditor-source-editor .cm-editor, .mdxeditor-source-editor .cm-scroller {
+  background-color: var(--vscode-editor-background) !important;
+  color: var(--vscode-editor-foreground) !important;
+  font-family: var(--vscode-editor-font-family, monospace) !important;
+  font-size: var(--vscode-editor-font-size, 14px) !important;
+}
+.mdxeditor-source-editor .cm-gutters {
+  background-color: var(--vscode-editor-background) !important;
+  color: var(--vscode-editorLineNumber-foreground, #858585) !important;
+  border-right: 1px solid var(--vscode-panel-border) !important;
+  font-family: var(--vscode-editor-font-family, monospace) !important;
+  font-size: var(--vscode-editor-font-size, 14px) !important;
+}
+.mdxeditor-source-editor .cm-activeLineGutter {
   background-color: transparent !important;
+  color: var(--vscode-editorLineNumber-activeForeground, #c6c6c6) !important;
+}
+.mdxeditor-source-editor .cm-activeLine {
+  background-color: var(--vscode-editor-lineHighlightBackground, rgba(255, 255, 255, 0.05)) !important;
 }
 
 .prose h1 {
