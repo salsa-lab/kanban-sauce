@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added `kanban-sauce.defaultEditorMode` configuration setting to select the default view mode for the inline feature editor (`rich-text` or `raw`).
+- Added `kanban-sauce.showLineNumbersInRawMode` configuration setting to toggle line numbers in the raw markdown editor.
+- Added `kanban-sauce.editorToolbarHeight` configuration setting to customize the height of the editor toolbar.
+
+### Changed
+
+- Replaced the Tiptap rich-text editor with MDXEditor (backed by Lexical) to prevent unintended alterations to the underlying markdown formatting and properly support MDX/Markdown nuances.
+
 ## [2.1.0] - 2023-08-11
 
 ### Added

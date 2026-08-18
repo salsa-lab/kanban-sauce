@@ -71,6 +71,9 @@ Tailor Kanban Sauce to your exact liking. Settings can be found under `kanban-sa
 | `compactMode` | `false` | Use compact card layout |
 | `addNewCardsToTop` | `false` | Add new cards to the top of the column |
 | `markdownEditorMode` | `false` | Open files in VS Code's native text editor instead of the inline rich-text editor |
+| `defaultEditorMode` | `rich-text` | Default view mode for the inline feature editor (`rich-text` or `raw`) |
+| `showLineNumbersInRawMode` | `true` | Enable or disable line numbers in the raw markdown editor |
+| `editorToolbarHeight` | `32` | Height in pixels of the MDX editor toolbar |
 | `fontSizeColumnHeader` | `16px` | Font size for column headers in the Kanban board (e.g. `16px`, `1.1rem`) |
 | `fontSizeCardTitle` | `14px` | Font size for card titles in the Kanban board (e.g. `14px`, `1rem`) |
 | `fontSizeCardDescription` | `14px` | Font size for the feature card body/description text in the Kanban board (e.g. `14px`, `0.9rem`) |
@@ -157,7 +160,7 @@ pnpm test          # Run unit/component tests
 ### Tech Stack
 
 **Extension Host:** TypeScript, VS Code API, esbuild  
-**Webview UI:** React 18, Vite, Tailwind CSS, Zustand, Tiptap
+**Webview UI:** React 18, Vite, Tailwind CSS, Zustand, MDXEditor
 
 ## Acknowledgements
 
