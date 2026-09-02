@@ -95,6 +95,9 @@ export interface CardDisplaySettings {
 // Messages between extension and webview
 export type BoardViewMode = 'standard' | 'epic'
 
+export type ColumnSortField = 'priority' | 'dueDate' | 'title' | 'created' | 'modified'
+export type ColumnSortDirection = 'asc' | 'desc'
+
 /** Stable id for the "no epic" swim lane (persisted collapse state). */
 export const NO_EPIC_LANE_ID = '__no_epic__'
 
@@ -140,6 +143,7 @@ export type WebviewMessage =
   | { type: 'toggleEpicCollapsed'; epicKey: string }
   | { type: 'moveAllCards'; sourceColumnId: string; targetColumnId: string; epicLane?: string | null }
   | { type: 'archiveAllCards'; sourceColumnId: string }
+  | { type: 'sortColumnCards'; columnId: string; field: ColumnSortField; direction: ColumnSortDirection; epicLane?: string | null }
   | { type: 'renameLabel'; oldName: string; newName: string }
   | { type: 'deleteLabel'; labelName: string }
   | { type: 'refresh' }

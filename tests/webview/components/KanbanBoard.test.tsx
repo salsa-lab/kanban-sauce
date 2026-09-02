@@ -284,6 +284,79 @@ describe('KanbanBoard — moveAllCards', () => {
 })
 
 // ---------------------------------------------------------------------------
+// Sort cards
+// ---------------------------------------------------------------------------
+
+describe('KanbanBoard — sortColumnCards', () => {
+  it('posts sortColumnCards when a sort option is chosen from the submenu', async () => {
+    useStore.setState({
+      columns: DEFAULT_COLUMNS,
+      features: [
+        makeFeature({ id: 'a', status: 'backlog', priority: 'low', order: 'a0' }),
+        makeFeature({ id: 'b', status: 'backlog', priority: 'critical', order: 'a1' })
+      ]
+    })
+    const { user } = setup()
+
+    const backlogSection = screen.getByTitle('Collapse Backlog').closest('[class*="rounded-lg"]') as HTMLElement
+    const menuBtn = within(backlogSection).getByTitle('Column options')
+    await user.click(menuBtn)
+
+    const sortWrapper = screen.getByText('Sort cards in this list').closest('div')!
+    fireEvent.mouseEnter(sortWrapper)
+
+    await user.click(screen.getByRole('button', { name: /priority: highest first/i }))
+
+    expect(mockPostMessage).toHaveBeenCalledWith({
+      type: 'sortColumnCards',
+      columnId: 'backlog',
+      field: 'priority',
+      direction: 'desc'
+    })
+  })
+
+  it('includes epicLane when the board is scoped to an epic swim lane', async () => {
+    useStore.setState({
+      columns: DEFAULT_COLUMNS,
+      features: [makeFeature({ status: 'backlog', epic: 'Payments' })]
+    })
+    const { user } = setup({ epicFilter: 'Payments' })
+
+    const backlogSection = screen.getByTitle('Collapse Backlog').closest('[class*="rounded-lg"]') as HTMLElement
+    const menuBtn = within(backlogSection).getByTitle('Column options')
+    await user.click(menuBtn)
+
+    const sortWrapper = screen.getByText('Sort cards in this list').closest('div')!
+    fireEvent.mouseEnter(sortWrapper)
+
+    await user.click(screen.getByRole('button', { name: /title: a to z/i }))
+
+    expect(mockPostMessage).toHaveBeenCalledWith({
+      type: 'sortColumnCards',
+      columnId: 'backlog',
+      field: 'title',
+      direction: 'asc',
+      epicLane: 'Payments'
+    })
+  })
+
+  it('disables sort options when the column is empty', async () => {
+    useStore.setState({
+      columns: DEFAULT_COLUMNS,
+      features: []
+    })
+    const { user } = setup()
+
+    const backlogSection = screen.getByTitle('Collapse Backlog').closest('[class*="rounded-lg"]') as HTMLElement
+    const menuBtn = within(backlogSection).getByTitle('Column options')
+    await user.click(menuBtn)
+
+    const sortWrapper = screen.getByText('Sort cards in this list').closest('div')!
+    expect(sortWrapper.className).toMatch(/pointer-events-none/)
+  })
+})
+
+// ---------------------------------------------------------------------------
 // Archive all cards (done column only)
 // ---------------------------------------------------------------------------
 

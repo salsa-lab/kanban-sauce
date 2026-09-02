@@ -3,7 +3,8 @@ import * as crypto from 'crypto'
 import * as path from 'path'
 import { generateKeyBetween, generateNKeysBetween } from 'fractional-indexing'
 import { getTitleFromContent, generateFeatureFilename } from '../shared/types'
-import type { Feature, FeatureStatus, Priority, KanbanColumn, FeatureFrontmatter, CardDisplaySettings, FilenamePattern, BoardViewMode } from '../shared/types'
+import type { Feature, FeatureStatus, Priority, KanbanColumn, FeatureFrontmatter, CardDisplaySettings, FilenamePattern, BoardViewMode, ColumnSortField, ColumnSortDirection } from '../shared/types'
+import { sortFeaturesForColumn } from '../shared/columnSort'
 import { ensureStatusSubfolders, moveFeatureFile, getFeatureFilePath, getStatusFromPath, fileExists } from './featureFileUtils'
 import { parseFeatureFile, serializeFeature } from '../shared/featureFrontmatter'
 import { featureMatchesEpicLane } from '../shared/epicLane'
@@ -246,6 +247,9 @@ export class KanbanPanel {
             break
           case 'archiveAllCards':
             await this._archiveAllCards(message.sourceColumnId)
+            break
+          case 'sortColumnCards':
+            await this._sortColumnCards(message.columnId, message.field, message.direction, message.epicLane)
             break
           case 'renameLabel':
             await this._renameLabel(message.oldName, message.newName)
@@ -748,6 +752,36 @@ export class KanbanPanel {
     }
 
     this._sendFeaturesToWebview()
+  }
+
+  private async _sortColumnCards(
+    columnId: string,
+    field: ColumnSortField,
+    direction: ColumnSortDirection,
+    epicLane?: string | null
+  ): Promise<void> {
+    const columnFeatures = this._features
+      .filter(f => f.status === columnId && featureMatchesEpicLane(f, epicLane))
+      .sort((a, b) => (a.order < b.order ? -1 : a.order > b.order ? 1 : 0))
+
+    if (columnFeatures.length < 2) return
+
+    const sorted = sortFeaturesForColumn(columnFeatures, field, direction)
+    const newKeys = generateNKeysBetween(null, null, sorted.length)
+
+    let anyChanged = false
+    for (let i = 0; i < sorted.length; i++) {
+      const feature = sorted[i]
+      if (feature.order === newKeys[i]) continue
+      feature.order = newKeys[i]
+      anyChanged = true
+      const content = this._serializeFeature(feature)
+      await vscode.workspace.fs.writeFile(vscode.Uri.file(feature.filePath), new TextEncoder().encode(content))
+    }
+
+    if (anyChanged) {
+      this._sendFeaturesToWebview()
+    }
   }
 
   private async _archiveAllCards(sourceColumnId: string): Promise<void> {
