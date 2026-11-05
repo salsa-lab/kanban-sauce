@@ -35,6 +35,7 @@ import { cn } from '../lib/utils'
 import { DatePicker } from './DatePicker'
 import { t } from '../lib/i18n'
 import { plainTextDescriptor } from './PlainTextCodeEditor'
+import { autolinkPlugin } from '../lib/autolinkPlugin'
 
 interface CreateFeatureDialogProps {
   isOpen: boolean
@@ -517,6 +518,7 @@ function CreateFeatureDialogContent({
                 thematicBreakPlugin(),
                 markdownShortcutPlugin(),
                 linkPlugin(),
+                autolinkPlugin(),
                 linkDialogPlugin(),
                 tablePlugin(),
                 codeBlockPlugin({ codeBlockEditorDescriptors: [plainTextDescriptor] }),

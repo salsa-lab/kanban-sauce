@@ -52,6 +52,7 @@ import { useStore } from '../store'
 import { AssigneeInput } from './AssigneeInput'
 import { EpicInput } from './EpicInput'
 import { plainTextDescriptor } from './PlainTextCodeEditor'
+import { autolinkPlugin } from '../lib/autolinkPlugin'
 
 
 
@@ -603,6 +604,7 @@ export function FeatureEditor({
               thematicBreakPlugin(),
               markdownShortcutPlugin(),
               linkPlugin(),
+              autolinkPlugin(),
               linkDialogPlugin(),
               tablePlugin(),
               codeBlockPlugin({ codeBlockEditorDescriptors: [plainTextDescriptor] }),
