@@ -488,7 +488,7 @@ function App(): React.JSX.Element {
           width: auto !important;
           padding: 0 4px !important;
           min-width: unset !important;
-          font-size: ${Math.max(10, cardSettings.editorToolbarHeight - 14)}px !important;
+          font-size: ${Math.max(10, cardSettings.editorToolbarHeight - 20)}px !important;
           line-height: 1 !important;
           display: inline-flex !important;
           align-items: center !important;
@@ -500,7 +500,7 @@ function App(): React.JSX.Element {
         .mdxeditor [class*="selectTrigger"] *,
         .mdxeditor [role="toolbar"] button span,
         .mdxeditor [role="toolbar"] span {
-          font-size: ${Math.max(10, cardSettings.editorToolbarHeight - 14)}px !important;
+          font-size: ${Math.max(10, cardSettings.editorToolbarHeight - 20)}px !important;
           line-height: 1 !important;
         }
         .mdxeditor [role="toolbar"] button,
@@ -515,7 +515,7 @@ function App(): React.JSX.Element {
         }
         .mdxeditor [role="toolbar"] button *,
         .mdxeditor [role="toolbar"] [role="combobox"] * {
-          font-size: ${Math.max(10, cardSettings.editorToolbarHeight - 14)}px !important;
+          font-size: ${Math.max(10, cardSettings.editorToolbarHeight - 20)}px !important;
           line-height: 1 !important;
         }
         .mdxeditor [role="toolbar"] button svg {
