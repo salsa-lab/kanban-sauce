@@ -57,5 +57,6 @@ export function serializeFeature(feature: Feature): string {
     ''
   ].join('\n')
 
-  return frontmatter + feature.content
+  const body = feature.content.replace(/(?:\r?\n)+$/, '')
+  return body ? `${frontmatter}${body}\n` : frontmatter
 }

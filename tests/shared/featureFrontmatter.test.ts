@@ -198,10 +198,18 @@ describe('serializeFeature', () => {
     expect(output).toContain('labels: []')
   })
 
-  it('appends content after the closing ---', () => {
+  it('appends content after the closing --- with a single trailing newline', () => {
     const feature = makeFeature({ content: '# Title\n\nBody text.' })
     const output = serializeFeature(feature)
-    expect(output).toContain('---\n# Title\n\nBody text.')
+    expect(output).toContain('---\n# Title\n\nBody text.\n')
+    expect(output.endsWith('\n')).toBe(true)
+    expect(output.endsWith('\n\n')).toBe(false)
+  })
+
+  it('normalizes existing trailing newlines to a single trailing newline', () => {
+    const feature = makeFeature({ content: '# Title\n\nBody text.\n\n' })
+    const output = serializeFeature(feature)
+    expect(output.endsWith('# Title\n\nBody text.\n')).toBe(true)
   })
 })
 
