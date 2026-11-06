@@ -29,10 +29,16 @@ export const plainTextDescriptor: CodeBlockEditorDescriptor = {
     }, [])
 
     return (
-      <div className="relative group rounded border m-0 my-0 bg-[var(--vscode-editor-background)]" style={{ borderColor: 'var(--vscode-panel-border)' }}>
-        <div 
+      <div
+        className="relative group rounded border m-0 my-0"
+        style={{
+          borderColor: 'var(--vscode-panel-border)',
+          backgroundColor: 'var(--vscode-textCodeBlock-background, rgba(127, 127, 127, 0.15))'
+        }}
+      >
+        <div
           className="absolute top-0 right-0 text-xs px-2 py-1 rounded-bl pointer-events-none"
-          style={{ 
+          style={{
             backgroundColor: 'var(--vscode-editor-inactiveSelectionBackground)',
             color: 'var(--vscode-descriptionForeground)'
           }}
@@ -42,9 +48,9 @@ export const plainTextDescriptor: CodeBlockEditorDescriptor = {
         <textarea
           ref={textareaRef}
           className="w-full bg-transparent p-3 pb-1 font-mono focus:outline-none m-0 block overflow-hidden"
-          style={{ 
-            color: 'var(--vscode-editor-foreground)', 
-            fontSize: 'var(--vscode-editor-font-size, 14px)',
+          style={{
+            color: 'var(--vscode-editor-foreground)',
+            fontSize: 'calc(var(--kanban-font-size-editor-body, 13px) - 3px)',
             minHeight: '3rem'
           }}
           value={props.code}
