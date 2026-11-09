@@ -1,7 +1,7 @@
 {
   "name": "kanban-sauce",
   "displayName": "Kanban Sauce",
-  "description": "A kanban board for your codebase. Features stored as markdown.",
+  "description": "A flexible, local-first Kanban board for your editor. Manage projects, tasks, notes, and ideas with Markdown files you own and version-control.",
   "version": "2.1.0",
   "packageManager": "pnpm@11.20.0",
   "publisher": "salsa-lab",
@@ -23,15 +23,35 @@
     "vscode": "^1.85.0"
   },
   "categories": [
-    "Other",
-    "Visualization"
+    "Visualization",
+    "Notebooks"
   ],
   "keywords": [
     "kanban",
+    "kanban board",
+    "board",
     "markdown",
     "project management",
     "task management",
-    "board"
+    "markdown kanban",
+    "project planning",
+    "productivity",
+    "local first",
+    "local first kanban",
+    "notes",
+    "vscode",
+    "cursor",
+    "vscodium",
+    "todo",
+    "backlog",
+    "agile",
+    "scrum",
+    "trello",
+    "notion",
+    "obsidian",
+    "planner",
+    "issue tracker",
+    "roadmap"
   ],
   "activationEvents": [
     "onWebviewPanel:kanban-sauce.panel",
@@ -105,7 +125,7 @@
       },
       {
         "command": "kanban-sauce.openFeatureFromTree",
-        "title": "Open Feature",
+        "title": "Open Card",
         "category": "%command.category%"
       },
       {
@@ -412,7 +432,7 @@
           "type": "string",
           "enum": ["rich-text", "raw"],
           "default": "rich-text",
-          "description": "Default view mode for the feature editor."
+          "description": "Default view mode for the card editor."
         },
         "kanban-sauce.showLineNumbersInRawMode": {
           "type": "boolean",
