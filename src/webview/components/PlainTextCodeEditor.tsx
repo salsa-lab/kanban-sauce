@@ -50,7 +50,7 @@ export const plainTextDescriptor: CodeBlockEditorDescriptor = {
           className="w-full bg-transparent p-3 pb-1 font-mono focus:outline-none m-0 block overflow-hidden"
           style={{
             color: 'var(--vscode-editor-foreground)',
-            fontSize: 'calc(var(--kanban-font-size-editor-body, 13px) - 3px)',
+            fontSize: 'calc(var(--kanban-font-size-editor-body, 16px) - 3px)',
             minHeight: '3rem'
           }}
           value={props.code}
