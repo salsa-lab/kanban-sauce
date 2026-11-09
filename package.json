@@ -60,6 +60,20 @@
   "main": "./dist/extension.js",
   "l10n": "./l10n",
   "contributes": {
+    "languages": [
+      {
+        "id": "json",
+        "filenames": [
+          ".kanbansauce"
+        ]
+      }
+    ],
+    "jsonValidation": [
+      {
+        "fileMatch": ".kanbansauce",
+        "url": "./resources/kanbansauce.schema.json"
+      }
+    ],
     "viewsContainers": {
       "activitybar": [
         {
@@ -88,13 +102,17 @@
     },
     "viewsWelcome": [
       {
+        "view": "kanban-sauce.boardsView",
+        "contents": "%viewsWelcome.boardsView%"
+      },
+      {
         "view": "kanban-sauce.inProgressView",
-        "contents": "No active board",
+        "contents": "%viewsWelcome.inProgressView.noBoard%",
         "when": "!kanban-sauce.activeBoard"
       },
       {
         "view": "kanban-sauce.inProgressView",
-        "contents": "No cards in the selected column",
+        "contents": "%viewsWelcome.inProgressView.emptyColumn%",
         "when": "kanban-sauce.activeBoard"
       }
     ],
@@ -227,240 +245,284 @@
         "icon": "$(trash)"
       }
     ],
-    "configuration": {
-      "title": "%config.title%",
-      "properties": {
-        "kanban-sauce.language": {
-          "type": "string",
-          "default": "auto",
-          "enum": [
-            "auto",
-            "en",
-            "es",
-            "pt"
-          ],
-          "enumDescriptions": [
-            "%config.language.auto%",
-            "%config.language.en%",
-            "%config.language.es%",
-            "%config.language.pt%"
-          ],
-          "description": "%config.language.description%"
-        },
-        "kanban-sauce.fontSizeColumnHeader": {
-          "type": "string",
-          "default": "16px",
-          "description": "%config.fontSizeColumnHeader.description%"
-        },
-        "kanban-sauce.fontSizeCardTitle": {
-          "type": "string",
-          "default": "14px",
-          "description": "%config.fontSizeCardTitle.description%"
-        },
-        "kanban-sauce.fontSizeCardDescription": {
-          "type": "string",
-          "default": "14px",
-          "description": "%config.fontSizeCardDescription.description%"
-        },
-        "kanban-sauce.fontSizeCardLabel": {
-          "type": "string",
-          "default": "12px",
-          "description": "%config.fontSizeCardLabel.description%"
-        },
-        "kanban-sauce.fontSizeCardMeta": {
-          "type": "string",
-          "default": "13px",
-          "description": "%config.fontSizeCardMeta.description%"
-        },
-        "kanban-sauce.fontSizeEditorHeader": {
-          "type": "string",
-          "default": "18px",
-          "description": "%config.fontSizeEditorHeader.description%"
-        },
-        "kanban-sauce.fontSizeEditorBody": {
-          "type": "string",
-          "default": "16px",
-          "description": "%config.fontSizeEditorBody.description%"
-        },
-        "kanban-sauce.fontSizeEditorMeta": {
-          "type": "string",
-          "default": "14px",
-          "description": "%config.fontSizeEditorMeta.description%"
-        },
-        "kanban-sauce.filenamePattern": {
-          "type": "string",
-          "default": "name-date",
-          "enum": [
-            "name-date",
-            "date-name",
-            "name-datetime",
-            "datetime-name"
-          ],
-          "enumDescriptions": [
-            "%config.filenamePattern.nameDate%",
-            "%config.filenamePattern.dateName%",
-            "%config.filenamePattern.nameDatetime%",
-            "%config.filenamePattern.datetimeName%"
-          ],
-          "description": "%config.filenamePattern.description%"
-        },
-        "kanban-sauce.defaultPriority": {
-          "type": "string",
-          "default": "medium",
-          "enum": [
-            "critical",
-            "high",
-            "medium",
-            "low"
-          ],
-          "enumDescriptions": [
-            "%config.defaultPriority.critical%",
-            "%config.defaultPriority.high%",
-            "%config.defaultPriority.medium%",
-            "%config.defaultPriority.low%"
-          ],
-          "description": "%config.defaultPriority.description%"
-        },
-        "kanban-sauce.defaultStatus": {
-          "type": "string",
-          "default": "backlog",
-          "enum": [
-            "backlog",
-            "todo",
-            "in-progress",
-            "review",
-            "done"
-          ],
-          "enumDescriptions": [
-            "%config.defaultStatus.backlog%",
-            "%config.defaultStatus.todo%",
-            "%config.defaultStatus.inProgress%",
-            "%config.defaultStatus.review%",
-            "%config.defaultStatus.done%"
-          ],
-          "description": "%config.defaultStatus.description%"
-        },
-        "kanban-sauce.columns": {
-          "type": "array",
-          "default": [
-            {
-              "id": "backlog",
-              "name": "Backlog",
-              "color": "#6b7280"
-            },
-            {
-              "id": "todo",
-              "name": "To Do",
-              "color": "#3b82f6"
-            },
-            {
-              "id": "in-progress",
-              "name": "In Progress",
-              "color": "#f59e0b"
-            },
-            {
-              "id": "review",
-              "name": "Review",
-              "color": "#8b5cf6"
-            },
-            {
-              "id": "done",
-              "name": "Done",
-              "color": "#22c55e"
-            }
-          ],
-          "description": "%config.columns.description%",
-          "items": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string",
-                "description": "%config.columns.id.description%"
+    "configuration": [
+      {
+        "title": "%config.workflow.title%",
+        "order": 1,
+        "properties": {
+          "kanban-sauce.defaultStatus": {
+            "type": "string",
+            "default": "backlog",
+            "order": 1,
+            "enum": [
+              "backlog",
+              "todo",
+              "in-progress",
+              "review",
+              "done"
+            ],
+            "enumDescriptions": [
+              "%config.defaultStatus.backlog%",
+              "%config.defaultStatus.todo%",
+              "%config.defaultStatus.inProgress%",
+              "%config.defaultStatus.review%",
+              "%config.defaultStatus.done%"
+            ],
+            "markdownDescription": "%config.defaultStatus.description%"
+          },
+          "kanban-sauce.defaultPriority": {
+            "type": "string",
+            "default": "medium",
+            "order": 2,
+            "enum": [
+              "critical",
+              "high",
+              "medium",
+              "low"
+            ],
+            "enumDescriptions": [
+              "%config.defaultPriority.critical%",
+              "%config.defaultPriority.high%",
+              "%config.defaultPriority.medium%",
+              "%config.defaultPriority.low%"
+            ],
+            "markdownDescription": "%config.defaultPriority.description%"
+          },
+          "kanban-sauce.addNewCardsToTop": {
+            "type": "boolean",
+            "default": false,
+            "order": 3,
+            "markdownDescription": "%config.addNewCardsToTop.description%"
+          },
+          "kanban-sauce.filenamePattern": {
+            "type": "string",
+            "default": "name-date",
+            "order": 4,
+            "enum": [
+              "name-date",
+              "date-name",
+              "name-datetime",
+              "datetime-name"
+            ],
+            "enumDescriptions": [
+              "%config.filenamePattern.nameDate%",
+              "%config.filenamePattern.dateName%",
+              "%config.filenamePattern.nameDatetime%",
+              "%config.filenamePattern.datetimeName%"
+            ],
+            "markdownDescription": "%config.filenamePattern.description%"
+          },
+          "kanban-sauce.columns": {
+            "type": "array",
+            "order": 5,
+            "default": [
+              {
+                "id": "backlog",
+                "name": "Backlog",
+                "color": "#6b7280"
               },
-              "name": {
-                "type": "string",
-                "description": "%config.columns.name.description%"
+              {
+                "id": "todo",
+                "name": "To Do",
+                "color": "#3b82f6"
               },
-              "color": {
-                "type": "string",
-                "description": "%config.columns.color.description%"
+              {
+                "id": "in-progress",
+                "name": "In Progress",
+                "color": "#f59e0b"
+              },
+              {
+                "id": "review",
+                "name": "Review",
+                "color": "#8b5cf6"
+              },
+              {
+                "id": "done",
+                "name": "Done",
+                "color": "#22c55e"
               }
-            },
-            "required": [
-              "id",
-              "name",
-              "color"
-            ]
+            ],
+            "markdownDescription": "%config.columns.description%",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "%config.columns.id.description%"
+                },
+                "name": {
+                  "type": "string",
+                  "description": "%config.columns.name.description%"
+                },
+                "color": {
+                  "type": "string",
+                  "description": "%config.columns.color.description%"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "color"
+              ]
+            }
+          },
+          "kanban-sauce.markdownEditorMode": {
+            "type": "boolean",
+            "default": false,
+            "order": 6,
+            "markdownDescription": "%config.markdownEditorMode.description%"
+          },
+          "kanban-sauce.defaultEditorMode": {
+            "type": "string",
+            "enum": [
+              "rich-text",
+              "raw"
+            ],
+            "default": "rich-text",
+            "order": 7,
+            "markdownDescription": "%config.defaultEditorMode.description%"
+          },
+          "kanban-sauce.showLineNumbersInRawMode": {
+            "type": "boolean",
+            "default": true,
+            "order": 8,
+            "markdownDescription": "%config.showLineNumbersInRawMode.description%"
+          },
+          "kanban-sauce.language": {
+            "type": "string",
+            "default": "auto",
+            "order": 9,
+            "enum": [
+              "auto",
+              "en",
+              "es",
+              "pt"
+            ],
+            "enumDescriptions": [
+              "%config.language.auto%",
+              "%config.language.en%",
+              "%config.language.es%",
+              "%config.language.pt%"
+            ],
+            "markdownDescription": "%config.language.description%"
           }
-        },
-        "kanban-sauce.showPriorityBadges": {
-          "type": "boolean",
-          "default": true,
-          "description": "%config.showPriorityBadges.description%"
-        },
-        "kanban-sauce.showAssignee": {
-          "type": "boolean",
-          "default": true,
-          "description": "%config.showAssignee.description%"
-        },
-        "kanban-sauce.showDueDate": {
-          "type": "boolean",
-          "default": true,
-          "description": "%config.showDueDate.description%"
-        },
-        "kanban-sauce.showLabels": {
-          "type": "boolean",
-          "default": true,
-          "description": "%config.showLabels.description%"
-        },
-        "kanban-sauce.showEpic": {
-          "type": "boolean",
-          "default": true,
-          "description": "%config.showEpic.description%"
-        },
-        "kanban-sauce.showFileName": {
-          "type": "boolean",
-          "default": false,
-          "description": "%config.showFileName.description%"
-        },
-        "kanban-sauce.compactMode": {
-          "type": "boolean",
-          "default": false,
-          "description": "%config.compactMode.description%"
-        },
-        "kanban-sauce.defaultEditorMode": {
-          "type": "string",
-          "enum": ["rich-text", "raw"],
-          "default": "rich-text",
-          "description": "Default view mode for the card editor."
-        },
-        "kanban-sauce.showLineNumbersInRawMode": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enable or disable line numbers in the raw markdown editor."
-        },
-        "kanban-sauce.editorToolbarHeight": {
-          "type": "number",
-          "default": 32,
-          "description": "Height in pixels of the MDX editor toolbar. Adjust this to make the toolbar thicker or thinner."
-        },
-        "kanban-sauce.addNewCardsToTop": {
-          "type": "boolean",
-          "default": false,
-          "description": "%config.addNewCardsToTop.description%"
-        },
-        "kanban-sauce.markdownEditorMode": {
-          "type": "boolean",
-          "default": false,
-          "description": "%config.markdownEditorMode.description%"
-        },
-        "kanban-sauce.hideScrollbar": {
-          "type": "boolean",
-          "default": false,
-          "description": "%config.hideScrollbar.description%"
+        }
+      },
+      {
+        "title": "%config.appearance.title%",
+        "order": 2,
+        "properties": {
+          "kanban-sauce.compactMode": {
+            "type": "boolean",
+            "default": false,
+            "order": 1,
+            "markdownDescription": "%config.compactMode.description%"
+          },
+          "kanban-sauce.showPriorityBadges": {
+            "type": "boolean",
+            "default": true,
+            "order": 2,
+            "markdownDescription": "%config.showPriorityBadges.description%"
+          },
+          "kanban-sauce.showAssignee": {
+            "type": "boolean",
+            "default": true,
+            "order": 3,
+            "markdownDescription": "%config.showAssignee.description%"
+          },
+          "kanban-sauce.showDueDate": {
+            "type": "boolean",
+            "default": true,
+            "order": 4,
+            "markdownDescription": "%config.showDueDate.description%"
+          },
+          "kanban-sauce.showLabels": {
+            "type": "boolean",
+            "default": true,
+            "order": 5,
+            "markdownDescription": "%config.showLabels.description%"
+          },
+          "kanban-sauce.showEpic": {
+            "type": "boolean",
+            "default": true,
+            "order": 6,
+            "markdownDescription": "%config.showEpic.description%"
+          },
+          "kanban-sauce.showFileName": {
+            "type": "boolean",
+            "default": false,
+            "order": 7,
+            "markdownDescription": "%config.showFileName.description%"
+          },
+          "kanban-sauce.hideScrollbar": {
+            "type": "boolean",
+            "default": false,
+            "order": 8,
+            "markdownDescription": "%config.hideScrollbar.description%"
+          },
+          "kanban-sauce.editorToolbarHeight": {
+            "type": "number",
+            "default": 32,
+            "order": 9,
+            "markdownDescription": "%config.editorToolbarHeight.description%"
+          }
+        }
+      },
+      {
+        "title": "%config.typography.title%",
+        "order": 3,
+        "properties": {
+          "kanban-sauce.fontSizeColumnHeader": {
+            "type": "string",
+            "default": "16px",
+            "order": 1,
+            "markdownDescription": "%config.fontSizeColumnHeader.description%"
+          },
+          "kanban-sauce.fontSizeCardTitle": {
+            "type": "string",
+            "default": "14px",
+            "order": 2,
+            "markdownDescription": "%config.fontSizeCardTitle.description%"
+          },
+          "kanban-sauce.fontSizeCardDescription": {
+            "type": "string",
+            "default": "14px",
+            "order": 3,
+            "markdownDescription": "%config.fontSizeCardDescription.description%"
+          },
+          "kanban-sauce.fontSizeCardLabel": {
+            "type": "string",
+            "default": "12px",
+            "order": 4,
+            "markdownDescription": "%config.fontSizeCardLabel.description%"
+          },
+          "kanban-sauce.fontSizeCardMeta": {
+            "type": "string",
+            "default": "13px",
+            "order": 5,
+            "markdownDescription": "%config.fontSizeCardMeta.description%"
+          },
+          "kanban-sauce.fontSizeEditorHeader": {
+            "type": "string",
+            "default": "18px",
+            "order": 6,
+            "markdownDescription": "%config.fontSizeEditorHeader.description%"
+          },
+          "kanban-sauce.fontSizeEditorBody": {
+            "type": "string",
+            "default": "16px",
+            "order": 7,
+            "markdownDescription": "%config.fontSizeEditorBody.description%"
+          },
+          "kanban-sauce.fontSizeEditorMeta": {
+            "type": "string",
+            "default": "14px",
+            "order": 8,
+            "markdownDescription": "%config.fontSizeEditorMeta.description%"
+          }
         }
       }
-    },
+    ],
     "menus": {
       "explorer/context": [
         {
@@ -470,6 +532,30 @@
         }
       ],
       "commandPalette": [
+        {
+          "command": "kanban-sauce.openBoardFromTree",
+          "when": "false"
+        },
+        {
+          "command": "kanban-sauce.openFeatureFromTree",
+          "when": "false"
+        },
+        {
+          "command": "kanban-sauce.openDirectory",
+          "when": "false"
+        },
+        {
+          "command": "kanban-sauce.changeSidebarColumn",
+          "when": "false"
+        },
+        {
+          "command": "kanban-sauce.boards.renameBoard",
+          "when": "false"
+        },
+        {
+          "command": "kanban-sauce.boards.removeBoard",
+          "when": "false"
+        },
         {
           "command": "kanban-sauce.boards.sortByName",
           "when": "false"
@@ -484,6 +570,22 @@
         },
         {
           "command": "kanban-sauce.boards.sortByModified.checked",
+          "when": "false"
+        },
+        {
+          "command": "kanban-sauce.boards.sortAscending",
+          "when": "false"
+        },
+        {
+          "command": "kanban-sauce.boards.sortAscending.checked",
+          "when": "false"
+        },
+        {
+          "command": "kanban-sauce.boards.sortDescending",
+          "when": "false"
+        },
+        {
+          "command": "kanban-sauce.boards.sortDescending.checked",
           "when": "false"
         },
         {
@@ -503,39 +605,7 @@
           "when": "false"
         },
         {
-          "command": "kanban-sauce.openBoardFromTree",
-          "when": "false"
-        },
-        {
-          "command": "kanban-sauce.openFeatureFromTree",
-          "when": "false"
-        },
-        {
-          "command": "kanban-sauce.openDirectory",
-          "when": "false"
-        },
-        {
-          "command": "kanban-sauce.boards.sortByName",
-          "when": "false"
-        },
-        {
-          "command": "kanban-sauce.boards.sortByModified",
-          "when": "false"
-        },
-        {
-          "command": "kanban-sauce.inProgress.sortByName",
-          "when": "false"
-        },
-        {
-          "command": "kanban-sauce.inProgress.sortByModified",
-          "when": "false"
-        },
-        {
-          "command": "kanban-sauce.inProgress.sortDescending.checked",
-          "when": "false"
-        },
-        {
-          "command": "kanban-sauce.inProgress.sortDescending",
+          "command": "kanban-sauce.inProgress.sortAscending",
           "when": "false"
         },
         {
@@ -543,31 +613,11 @@
           "when": "false"
         },
         {
-          "command": "kanban-sauce.inProgress.sortAscending",
+          "command": "kanban-sauce.inProgress.sortDescending",
           "when": "false"
         },
         {
-          "command": "kanban-sauce.boards.sortDescending.checked",
-          "when": "false"
-        },
-        {
-          "command": "kanban-sauce.boards.sortDescending",
-          "when": "false"
-        },
-        {
-          "command": "kanban-sauce.boards.sortAscending.checked",
-          "when": "false"
-        },
-        {
-          "command": "kanban-sauce.boards.sortAscending",
-          "when": "false"
-        },
-        {
-          "command": "kanban-sauce.boards.renameBoard",
-          "when": "false"
-        },
-        {
-          "command": "kanban-sauce.boards.removeBoard",
+          "command": "kanban-sauce.inProgress.sortDescending.checked",
           "when": "false"
         }
       ],
