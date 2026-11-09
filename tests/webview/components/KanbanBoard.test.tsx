@@ -132,10 +132,10 @@ describe('KanbanBoard — feature placement', () => {
     expect(heading1).not.toBe(heading2)
   })
 
-  it('shows "No features" when a column has no cards', () => {
+  it('shows "No cards" when a column has no cards', () => {
     useStore.setState({ columns: DEFAULT_COLUMNS, features: [] })
     setup()
-    const noFeatureMessages = screen.getAllByText('No features')
+    const noFeatureMessages = screen.getAllByText('No cards')
     expect(noFeatureMessages).toHaveLength(DEFAULT_COLUMNS.length)
   })
 })

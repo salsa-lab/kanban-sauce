@@ -91,7 +91,7 @@ async function createFeatureFromPrompts(context: vscode.ExtensionContext): Promi
         path: "CHOOSE_FOLDER"
       })
       const selectedBoard = await vscode.window.showQuickPick(items, {
-        placeHolder: "Select which Kanban Board to add the feature to"
+        placeHolder: "Select which Kanban Board to add the card to"
       })
       if (!selectedBoard) return
       if (selectedBoard.path === 'CHOOSE_FOLDER') {
@@ -377,7 +377,7 @@ export function activate(context: vscode.ExtensionContext) {
       } else if (KanbanPanel.openPanels.size === 1) {
         Array.from(KanbanPanel.openPanels.values())[0]?.values().next().value?.openFeature(featureId)
       } else {
-        vscode.window.showErrorMessage('No active Kanban board to open this feature in.')
+        vscode.window.showErrorMessage('No active Kanban board to open this card in.')
       }
     })
   )
