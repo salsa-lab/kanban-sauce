@@ -1,8 +1,32 @@
 import { useEffect, useCallback, useState, useRef, useMemo } from 'react'
-import { useEditor, EditorContent } from '@tiptap/react'
-import StarterKit from '@tiptap/starter-kit'
-import Placeholder from '@tiptap/extension-placeholder'
-import { Markdown } from 'tiptap-markdown'
+import {
+  MDXEditor,
+  MDXEditorMethods,
+  headingsPlugin,
+  listsPlugin,
+  quotePlugin,
+  thematicBreakPlugin,
+  markdownShortcutPlugin,
+  linkPlugin,
+  linkDialogPlugin,
+  tablePlugin,
+  codeBlockPlugin,
+  imagePlugin,
+  toolbarPlugin,
+  BoldItalicUnderlineToggles,
+  StrikeThroughSupSubToggles,
+  CodeToggle,
+  BlockTypeSelect,
+  CreateLink,
+  ListsToggle,
+  InsertTable,
+  InsertThematicBreak,
+  InsertCodeBlock,
+  InsertImage,
+  diffSourcePlugin,
+  DiffSourceToggleWrapper
+} from '@mdxeditor/editor'
+import '@mdxeditor/editor/style.css'
 import {
   X,
   User,
@@ -27,14 +51,10 @@ import { t } from '../lib/i18n'
 import { useStore } from '../store'
 import { AssigneeInput } from './AssigneeInput'
 import { EpicInput } from './EpicInput'
+import { plainTextDescriptor } from './PlainTextCodeEditor'
+import { autolinkPlugin } from '../lib/autolinkPlugin'
 
-interface MarkdownStorage {
-  markdown: { getMarkdown: () => string }
-}
 
-function getMarkdown(editor: { storage: unknown }): string {
-  return (editor.storage as MarkdownStorage).markdown.getMarkdown()
-}
 
 interface FeatureEditorProps {
   featureId: string
@@ -323,37 +343,35 @@ export function FeatureEditor({
   const [confirmingDelete, setConfirmingDelete] = useState(false)
   const priorityLabels = getPriorityLabels()
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const isInitialLoad = useRef(true)
   const currentFrontmatterRef = useRef(currentFrontmatter)
   currentFrontmatterRef.current = currentFrontmatter
 
-  const editor = useEditor({
-    extensions: [
-      StarterKit,
-      Placeholder.configure({ placeholder: t('editor.startWriting') }),
-      Markdown.configure({ html: false, transformPastedText: true })
-    ],
-    content: '',
-    editorProps: {
-      attributes: {
-        class: 'prose prose-sm dark:prose-invert max-w-none focus:outline-none min-h-[200px] p-4'
-      }
-    },
-    onUpdate: ({ editor: ed }) => {
-      if (isInitialLoad.current) return
-      if (debounceRef.current) clearTimeout(debounceRef.current)
-      debounceRef.current = setTimeout(() => {
-        const markdown = getMarkdown(ed)
-        onSave(markdown, currentFrontmatterRef.current)
-      }, 800)
-    }
-  })
+  const [localContent, setLocalContent] = useState(content || '')
+  const editorRef = useRef<MDXEditorMethods>(null)
+  
+  const [isDark, setIsDark] = useState(() => document.documentElement.classList.contains('dark'))
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setIsDark(document.documentElement.classList.contains('dark'))
+    })
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
+    return () => observer.disconnect()
+  }, [])
+
+  const handleUpdate = useCallback((markdown: string) => {
+    // Normalize excessive newlines (e.g., from Lexical inserting escape paragraphs around blocks)
+    const cleanedMarkdown = markdown.replace(/\n{3,}/g, '\n\n')
+    
+    setLocalContent(cleanedMarkdown)
+    if (debounceRef.current) clearTimeout(debounceRef.current)
+    debounceRef.current = setTimeout(() => {
+      onSave(cleanedMarkdown, currentFrontmatterRef.current)
+    }, 800)
+  }, [onSave])
 
   const save = useCallback(() => {
-    if (!editor) return
-    const markdown = getMarkdown(editor)
-    onSave(markdown, currentFrontmatter)
-  }, [editor, currentFrontmatter, onSave])
+    onSave(localContent, currentFrontmatter)
+  }, [localContent, currentFrontmatter, onSave])
 
   // Clean up debounce on unmount
   useEffect(() => {
@@ -362,18 +380,12 @@ export function FeatureEditor({
     }
   }, [])
 
-  // Set content when a new feature is opened (keyed by featureId, not content)
+  // Set content when a new feature is opened
   useEffect(() => {
-    if (editor && content) {
-      isInitialLoad.current = true
-      editor.commands.setContent(content)
-      // Allow a tick for the onUpdate from setContent to fire, then re-enable
-      requestAnimationFrame(() => {
-        isInitialLoad.current = false
-      })
-    }
+    setLocalContent(content || '')
+    editorRef.current?.setMarkdown(content || '')
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [editor, featureId, contentVersion])
+  }, [featureId, contentVersion])
 
   // Reset frontmatter when prop changes
   useEffect(() => {
@@ -387,14 +399,12 @@ export function FeatureEditor({
         // Schedule a save with the updated frontmatter
         if (debounceRef.current) clearTimeout(debounceRef.current)
         debounceRef.current = setTimeout(() => {
-          if (!editor) return
-          const markdown = getMarkdown(editor)
-          onSave(markdown, next)
+          onSave(localContent, next)
         }, 800)
         return next
       })
     },
-    [editor, onSave]
+    [localContent, onSave]
   )
 
   // Keyboard shortcuts
@@ -568,12 +578,62 @@ export function FeatureEditor({
             />
           </PropertyRow>
         )}
-      </div>
+        </div>
 
-      {/* Editor */}
-      <div className="flex-1 overflow-auto">
-        <EditorContent editor={editor} className="h-full" />
+        {/* Content */}
+        <div 
+          className={cn("flex-1 overflow-auto min-h-0", isDark ? 'dark-theme dark-editor' : '')}
+        >
+          <MDXEditor
+            ref={editorRef}
+            markdown={localContent}
+            onChange={handleUpdate}
+            translation={(key, defaultValue, interpolations) => {
+              if (key === 'toolbar.source') return 'Raw mode';
+              if (!interpolations) return defaultValue;
+              return Object.entries(interpolations).reduce(
+                (acc, [k, v]) => acc.replace(new RegExp(`{{\\s*${k}\\s*}}`, 'g'), String(v)),
+                defaultValue
+              );
+            }}
+            contentEditableClassName="prose prose-sm dark:prose-invert max-w-none focus:outline-none min-h-[200px] p-4"
+            plugins={[
+              headingsPlugin(),
+              listsPlugin(),
+              quotePlugin(),
+              thematicBreakPlugin(),
+              markdownShortcutPlugin(),
+              linkPlugin(),
+              autolinkPlugin(),
+              linkDialogPlugin(),
+              tablePlugin(),
+              codeBlockPlugin({ codeBlockEditorDescriptors: [plainTextDescriptor] }),
+              imagePlugin(),
+              toolbarPlugin({
+                toolbarContents: () => (
+                  <DiffSourceToggleWrapper 
+                    options={['rich-text', 'source']}
+                    SourceToolbar={<span className="text-sm font-medium ml-2 text-[var(--vscode-foreground)]">Raw mode</span>}
+                  >
+                    <div className="flex items-center gap-1 overflow-x-auto overflow-y-hidden w-full px-4 py-1 border-b border-[var(--vscode-panel-border)] sticky top-0 bg-[var(--vscode-editor-background)] z-10 flex-nowrap">
+                      <BoldItalicUnderlineToggles />
+                      <StrikeThroughSupSubToggles />
+                      <CodeToggle />
+                      <BlockTypeSelect />
+                      <CreateLink />
+                      <ListsToggle />
+                      <InsertTable />
+                      <InsertThematicBreak />
+                      <InsertCodeBlock />
+                      <InsertImage />
+                    </div>
+                  </DiffSourceToggleWrapper>
+                )
+              }),
+              diffSourcePlugin({ viewMode: cardSettings.defaultEditorMode === 'raw' ? 'source' : 'rich-text' })
+            ]}
+          />
+        </div>
       </div>
-    </div>
   )
 }

@@ -112,7 +112,18 @@ export const useStore = create<KanbanState>((set, get) => ({
     markdownEditorMode: false,
     hideScrollbar: false,
     defaultPriority: 'medium',
-    defaultStatus: 'backlog'
+    defaultStatus: 'backlog',
+    fontSizeColumnHeader: '16px',
+    fontSizeCardTitle: '14px',
+    fontSizeCardDescription: '14px',
+    fontSizeCardLabel: '12px',
+    fontSizeCardMeta: '13px',
+    fontSizeEditorHeader: '18px',
+    fontSizeEditorBody: '16px',
+    fontSizeEditorMeta: '14px',
+    defaultEditorMode: 'rich-text',
+    showLineNumbersInRawMode: true,
+    editorToolbarHeight: 32
   },
 
   setLocale: (locale) => set({ locale }),

@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Rich-Text & Raw Markdown Editor Toggle**: Added `kanban-sauce.defaultEditorMode` setting to choose the default view mode for the inline card editor (`rich-text` or `raw`), with an in-toolbar toggle to switch modes on the fly.
+- **Raw Editor Line Numbers**: Added `kanban-sauce.showLineNumbersInRawMode` setting to show or hide line numbers in the raw Markdown editor.
+- **Customizable Editor Toolbar Height**: Added `kanban-sauce.editorToolbarHeight` setting to adjust the height of the MDXEditor toolbar in pixels.
+- **Native `.kanbansauce` JSON Support & Schema Validation**: Associated `.kanbansauce` files with JSON in VS Code and added a JSON Schema (`resources/kanbansauce.schema.json`) providing syntax highlighting, hover docs, hex color validation, and starter board snippets.
+- **Sidebar Empty-State Welcome Views**: Added a first-run welcome prompt with a one-click **Open Folder as Kanban Board** button in the **Available Boards** and **Cards** sidebar views when no board is open.
+- **Image Rendering in Cards & Editor**: Enabled rendering of external and local images (`https:` and `data:`) in the webview content security policy.
+
+### Changed
+
+- **MDXEditor Integration**: Replaced the Tiptap editor with MDXEditor (backed by Lexical) and a lightweight plain-text code block editor to preserve underlying Markdown structure without bundle bloat.
+- **Grouped Settings & Markdown Descriptions**: Organized all 26 extension settings into three ordered sections (Workflow & Defaults, Board & Card Appearance, and Typography) and enabled `markdownDescription` across all localized bundles (`en`, `es`, `pt`).
+- **Harmonized User-Facing "Card" Terminology**: Standardized all user-visible labels, commands, tooltips, and settings descriptions across English, Spanish, and Portuguese to consistently use **card** instead of **feature** (while preserving internal variable names and setting keys).
+- **Theme-Adaptive Code Block Styling**: Styled code blocks in the editor using VS Code's `--vscode-textCodeBlock-background` theme variable and a slightly smaller monospace font size for visual distinction.
+- **Documentation & Marketplace Metadata**: Expanded `README.md` with complete configuration tables and collapsible typography documentation, and updated `package.json` description, categories, and keywords.
+
+### Fixed
+
+- **Angle-Bracket Autolink Preservation**: Fixed an MDXEditor parsing error where CommonMark autolinks (`<https://...>`, `<www.example.com>`, `<user@example.com>`) were misinterpreted as malformed JSX tags, preserving their `<...>` syntax on save.
+- **Trailing Newline Preservation**: Preserved a single trailing newline (`\n`) when serializing card `.md` files so saving cards in the board does not strip POSIX trailing newlines.
+- **Editor Toolbar & Dropdown Styling**: Fixed oversized text in the toolbar's block-type selector dropdown and matched popup menu backgrounds to the active VS Code theme.
+- **Font-Size Fallback Consistency**: Aligned default fallback values for `fontSize*` settings across the extension, webview store, CSS variables, and localization descriptions.
+- **Command Palette Cleanup**: Removed duplicate sort entries and hid internal sidebar filter commands from the global Command Palette.
+
 ## [2.1.0] - 2023-08-11
 
 ### Added

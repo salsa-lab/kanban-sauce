@@ -1,0 +1,106 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/salsa-lab/kanban-sauce/main/resources/kanbansauce.schema.json",
+  "title": "Kanban Sauce Board Configuration",
+  "description": "Per-board configuration schema for Kanban Sauce board columns and styling.",
+  "type": "object",
+  "required": [
+    "columns"
+  ],
+  "properties": {
+    "columns": {
+      "type": "array",
+      "description": "Ordered list of workflow columns displayed on this board.",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "title": "Board Column",
+        "required": [
+          "id",
+          "name",
+          "color"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9-_]+$",
+            "description": "Unique column identifier. Matching cards will store this value in their YAML frontmatter 'status' field (e.g., 'backlog', 'in-progress').",
+            "examples": [
+              "backlog",
+              "todo",
+              "in-progress",
+              "review",
+              "done"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50,
+            "description": "Display name rendered in the column header on the board.",
+            "examples": [
+              "Backlog",
+              "To Do",
+              "In Progress",
+              "Under Review",
+              "Done"
+            ]
+          },
+          "color": {
+            "type": "string",
+            "pattern": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3}|[A-Fa-f0-9]{8})$",
+            "description": "Hex color code (#RGB, #RRGGBB, or #RRGGBBAA) used for column accents, badges, and status indicators.",
+            "default": "#3b82f6",
+            "examples": [
+              "#6b7280",
+              "#3b82f6",
+              "#f59e0b",
+              "#8b5cf6",
+              "#22c55e",
+              "#ef4444"
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "defaultSnippets": [
+          {
+            "label": "New Board Column",
+            "description": "Insert a new column definition",
+            "body": {
+              "id": "${1:column-id}",
+              "name": "${2:Column Name}",
+              "color": "${3:#3b82f6}"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "additionalProperties": false,
+  "defaultSnippets": [
+    {
+      "label": "Kanban Sauce: Standard 5-Stage Board",
+      "description": "Initialize a standard Agile/Kanban 5-stage board layout",
+      "body": {
+        "columns": [
+          { "id": "backlog", "name": "Backlog", "color": "#6b7280" },
+          { "id": "todo", "name": "To Do", "color": "#3b82f6" },
+          { "id": "in-progress", "name": "In Progress", "color": "#f59e0b" },
+          { "id": "review", "name": "Review", "color": "#8b5cf6" },
+          { "id": "done", "name": "Done", "color": "#22c55e" }
+        ]
+      }
+    },
+    {
+      "label": "Kanban Sauce: Simple 3-Stage Board",
+      "description": "Initialize a simplified To Do / In Progress / Done board layout",
+      "body": {
+        "columns": [
+          { "id": "todo", "name": "To Do", "color": "#3b82f6" },
+          { "id": "in-progress", "name": "In Progress", "color": "#f59e0b" },
+          { "id": "done", "name": "Done", "color": "#22c55e" }
+        ]
+      }
+    }
+  ]
+}

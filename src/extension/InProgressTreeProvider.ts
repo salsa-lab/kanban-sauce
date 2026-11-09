@@ -73,7 +73,7 @@ export class InProgressTreeProvider implements vscode.TreeDataProvider<FeatureTr
         vscode.TreeItemCollapsibleState.None,
         {
           command: 'kanban-sauce.openFeatureFromTree',
-          title: 'Open Feature',
+          title: 'Open Card',
           arguments: [f.id]
         }
       )

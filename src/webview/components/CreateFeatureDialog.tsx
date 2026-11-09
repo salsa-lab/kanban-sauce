@@ -1,24 +1,41 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
 import { AssigneeInput } from './AssigneeInput'
 import { EpicInput } from './EpicInput'
-import { useEditor, EditorContent } from '@tiptap/react'
-import StarterKit from '@tiptap/starter-kit'
-import Placeholder from '@tiptap/extension-placeholder'
-import { Markdown } from 'tiptap-markdown'
+import {
+  MDXEditor,
+  headingsPlugin,
+  listsPlugin,
+  quotePlugin,
+  thematicBreakPlugin,
+  markdownShortcutPlugin,
+  linkPlugin,
+  linkDialogPlugin,
+  tablePlugin,
+  codeBlockPlugin,
+  imagePlugin,
+  toolbarPlugin,
+  BoldItalicUnderlineToggles,
+  StrikeThroughSupSubToggles,
+  CodeToggle,
+  BlockTypeSelect,
+  CreateLink,
+  ListsToggle,
+  InsertTable,
+  InsertThematicBreak,
+  InsertCodeBlock,
+  InsertImage,
+  diffSourcePlugin,
+  DiffSourceToggleWrapper
+} from '@mdxeditor/editor'
+import '@mdxeditor/editor/style.css'
 import { X, ChevronDown, User, Tag, Check, CircleDot, Signal, Calendar, Layers } from 'lucide-react'
 import type { FeatureStatus, Priority } from '../../shared/types'
 import { useStore } from '../store'
 import { cn } from '../lib/utils'
 import { DatePicker } from './DatePicker'
 import { t } from '../lib/i18n'
-
-interface MarkdownStorage {
-  markdown: { getMarkdown: () => string }
-}
-
-function getMarkdown(editor: { storage: unknown }): string {
-  return (editor.storage as MarkdownStorage).markdown.getMarkdown()
-}
+import { plainTextDescriptor } from './PlainTextCodeEditor'
+import { autolinkPlugin } from '../lib/autolinkPlugin'
 
 interface CreateFeatureDialogProps {
   isOpen: boolean
@@ -315,19 +332,16 @@ function CreateFeatureDialogContent({
   const [epic, setEpic] = useState('')
   const inputRef = useRef<HTMLTextAreaElement>(null)
 
-  const descriptionEditor = useEditor({
-    extensions: [
-      StarterKit,
-      Placeholder.configure({ placeholder: t('create.addDescription') }),
-      Markdown.configure({ html: false, transformPastedText: true })
-    ],
-    content: '',
-    editorProps: {
-      attributes: {
-        class: 'prose prose-sm dark:prose-invert max-w-none focus:outline-none min-h-[200px]'
-      }
-    }
-  })
+  const [localContent, setLocalContent] = useState('')
+  const [isDark, setIsDark] = useState(() => document.documentElement.classList.contains('dark'))
+  
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setIsDark(document.documentElement.classList.contains('dark'))
+    })
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
+    return () => observer.disconnect()
+  }, [])
 
   // Focus input on mount
   useEffect(() => {
@@ -336,7 +350,7 @@ function CreateFeatureDialogContent({
   }, [])
 
   const handleSubmit = () => {
-    const description = descriptionEditor ? getMarkdown(descriptionEditor).trim() : ''
+    const description = localContent.trim()
     const heading = title.trim()
     if (!heading && !description) return
     const content = heading ? `# ${heading}${description ? '\n\n' + description : ''}` : description
@@ -479,11 +493,61 @@ function CreateFeatureDialogContent({
             onKeyDown={(e) => {
               if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault()
-                descriptionEditor?.commands.focus()
+                // MDXEditor doesn't have a simple focus command without a ref, 
+                // but we can let the user click into it.
               }
             }}
           />
-          <EditorContent editor={descriptionEditor} />
+          <div className={cn("flex-1 overflow-auto border rounded relative", isDark ? 'dark-theme dark-editor' : '')} style={{ borderColor: 'var(--vscode-panel-border)' }}>
+            <MDXEditor
+              markdown={localContent}
+              onChange={(val) => setLocalContent(val.replace(/\n{3,}/g, '\n\n'))}
+              translation={(key, defaultValue, interpolations) => {
+                if (key === 'toolbar.source') return 'Raw mode';
+                if (!interpolations) return defaultValue;
+                return Object.entries(interpolations).reduce(
+                  (acc, [k, v]) => acc.replace(new RegExp(`{{\\s*${k}\\s*}}`, 'g'), String(v)),
+                  defaultValue
+                );
+              }}
+              contentEditableClassName="prose prose-sm dark:prose-invert max-w-none focus:outline-none min-h-[200px] p-4"
+              plugins={[
+                headingsPlugin(),
+                listsPlugin(),
+                quotePlugin(),
+                thematicBreakPlugin(),
+                markdownShortcutPlugin(),
+                linkPlugin(),
+                autolinkPlugin(),
+                linkDialogPlugin(),
+                tablePlugin(),
+                codeBlockPlugin({ codeBlockEditorDescriptors: [plainTextDescriptor] }),
+                imagePlugin(),
+                toolbarPlugin({
+                  toolbarContents: () => (
+                    <DiffSourceToggleWrapper 
+                      options={['rich-text', 'source']}
+                      SourceToolbar={<span className="text-sm font-medium ml-2 text-[var(--vscode-foreground)]">Raw mode</span>}
+                    >
+                      <div className="flex items-center gap-1 overflow-x-auto overflow-y-hidden w-full flex-nowrap py-1">
+                        <BoldItalicUnderlineToggles />
+                        <StrikeThroughSupSubToggles />
+                        <CodeToggle />
+                        <BlockTypeSelect />
+                        <CreateLink />
+                        <ListsToggle />
+                        <InsertTable />
+                        <InsertThematicBreak />
+                        <InsertCodeBlock />
+                        <InsertImage />
+                      </div>
+                    </DiffSourceToggleWrapper>
+                  )
+                }),
+                diffSourcePlugin({ viewMode: cardSettings.defaultEditorMode === 'raw' ? 'source' : 'rich-text' })
+              ]}
+            />
+          </div>
         </div>
 
         {/* Footer hint */}

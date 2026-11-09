@@ -374,7 +374,7 @@ export class KanbanPanel {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource}; script-src ${webview.cspSource} 'nonce-${nonce}';">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src ${webview.cspSource} https: http: data: blob:; style-src ${webview.cspSource} 'unsafe-inline'; script-src ${webview.cspSource} 'nonce-${nonce}';">
   <link href="${styleUri}" rel="stylesheet">
   <title>Kanban Board</title>
 </head>
@@ -1135,14 +1135,17 @@ export class KanbanPanel {
       hideScrollbar: config.get<boolean>('hideScrollbar', false),
       defaultPriority: config.get<Priority>('defaultPriority', 'medium'),
       defaultStatus: config.get<FeatureStatus>('defaultStatus', 'backlog'),
-      fontSizeColumnHeader: config.get<string>('fontSizeColumnHeader', '14px'),
-      fontSizeCardTitle: config.get<string>('fontSizeCardTitle', '13px'),
-      fontSizeCardDescription: config.get<string>('fontSizeCardDescription', '12px'),
-      fontSizeCardLabel: config.get<string>('fontSizeCardLabel', '11px'),
-      fontSizeCardMeta: config.get<string>('fontSizeCardMeta', '11px'),
-      fontSizeEditorHeader: config.get<string>('fontSizeEditorHeader', '20px'),
-      fontSizeEditorBody: config.get<string>('fontSizeEditorBody', '13px'),
-      fontSizeEditorMeta: config.get<string>('fontSizeEditorMeta', '12px')
+      fontSizeColumnHeader: config.get<string>('fontSizeColumnHeader', '16px'),
+      fontSizeCardTitle: config.get<string>('fontSizeCardTitle', '14px'),
+      fontSizeCardDescription: config.get<string>('fontSizeCardDescription', '14px'),
+      fontSizeCardLabel: config.get<string>('fontSizeCardLabel', '12px'),
+      fontSizeCardMeta: config.get<string>('fontSizeCardMeta', '13px'),
+      fontSizeEditorHeader: config.get<string>('fontSizeEditorHeader', '18px'),
+      fontSizeEditorBody: config.get<string>('fontSizeEditorBody', '16px'),
+      fontSizeEditorMeta: config.get<string>('fontSizeEditorMeta', '14px'),
+      defaultEditorMode: config.get<'rich-text' | 'raw'>('defaultEditorMode', 'rich-text'),
+      showLineNumbersInRawMode: config.get<boolean>('showLineNumbersInRawMode', true),
+      editorToolbarHeight: config.get<number>('editorToolbarHeight', 32)
     }
 
     const collapsedColumns: string[] = this._context.workspaceState.get('kanban-sauce.collapsedColumns', [])

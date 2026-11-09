@@ -410,6 +410,154 @@ function App(): React.JSX.Element {
 
   return (
     <div className="h-full w-full flex flex-col bg-[var(--vscode-editor-background)]">
+      <style dangerouslySetInnerHTML={{ __html: `
+        /* MDXEditor CSS variable overrides */
+        body, .mdxeditor, .dark-theme, .light-theme, :root {
+          --mdxeditor-font-family: inherit !important;
+          --mdxeditor-text-color: var(--vscode-editor-foreground, #cccccc) !important;
+          --basePageBg: transparent !important;
+          --baseBase: transparent !important;
+          --baseBg: var(--vscode-dropdown-background, #3c3c3c) !important;
+          --baseBgSubtle: var(--vscode-dropdown-background, #3c3c3c) !important;
+          --baseBgHover: var(--vscode-list-hoverBackground, #2a2d2e) !important;
+          --baseBgActive: var(--vscode-list-activeSelectionBackground, #04395e) !important;
+          --baseBorder: var(--vscode-panel-border, #444444) !important;
+          --baseBorderHover: var(--vscode-disabledForeground, #888888) !important;
+          --baseText: var(--vscode-dropdown-foreground, #f0f0f0) !important;
+          --baseTextContrast: var(--vscode-editor-foreground, #cccccc) !important;
+          --accentBase: var(--vscode-button-background, #0e639c) !important;
+          --accentBg: var(--vscode-button-background, #0e639c) !important;
+          --accentText: var(--vscode-button-foreground, #ffffff) !important;
+        }
+
+        /* Radix Dropdown overrides */
+        [data-radix-popper-content-wrapper] * {
+          background-color: var(--vscode-dropdown-background, #3c3c3c) !important;
+          color: var(--vscode-dropdown-foreground, #f0f0f0) !important;
+          border-color: var(--vscode-dropdown-border, #454545) !important;
+        }
+        [data-radix-popper-content-wrapper] > div {
+          border: 1px solid var(--vscode-dropdown-border, #454545) !important;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+        }
+        [data-radix-popper-content-wrapper] [data-highlighted] {
+          background-color: var(--vscode-list-activeSelectionBackground, #04395e) !important;
+          color: var(--vscode-list-activeSelectionForeground, #ffffff) !important;
+        }
+        [data-radix-popper-content-wrapper] div[role="option"] {
+          background-color: transparent !important;
+        }
+        
+        /* Dropdown Trigger boundaries inside toolbar */
+        .mdxeditor [role="toolbar"] button[role="combobox"] {
+          background-color: var(--vscode-dropdown-background, #3c3c3c) !important;
+          border: 1px solid var(--vscode-dropdown-border, #454545) !important;
+          border-radius: 4px !important;
+          margin: 0 4px !important;
+        }
+        
+        /* Make toolbar opaque so scrolling text doesn't show through, but match editor background */
+        .mdxeditor [role="toolbar"] {
+          background-color: var(--vscode-editor-background) !important;
+          z-index: 10 !important;
+          ${cardSettings.editorToolbarHeight ? `
+            height: ${cardSettings.editorToolbarHeight}px !important;
+            min-height: ${cardSettings.editorToolbarHeight}px !important;
+            max-height: ${cardSettings.editorToolbarHeight}px !important;
+            padding: 0 8px !important;
+            overflow-y: hidden !important;
+            scrollbar-width: none !important;
+          ` : ''}
+        }
+        ${cardSettings.editorToolbarHeight ? `
+        .mdxeditor [role="toolbar"] > div::-webkit-scrollbar {
+          display: none !important;
+        }
+        .mdxeditor [role="toolbar"] > div {
+          height: 100% !important;
+          display: flex !important;
+          align-items: center !important;
+          scrollbar-width: none !important;
+          -ms-overflow-style: none !important;
+        }
+        .mdxeditor [role="toolbar"] button,
+        .mdxeditor [role="toolbar"] [role="combobox"],
+        .mdxeditor [role="toolbar"] [data-toolbar-item],
+        .mdxeditor [class*="selectTrigger"] {
+          height: ${Math.max(16, cardSettings.editorToolbarHeight - 4)}px !important;
+          width: auto !important;
+          padding: 0 4px !important;
+          min-width: unset !important;
+          font-size: ${Math.max(10, cardSettings.editorToolbarHeight - 20)}px !important;
+          line-height: 1 !important;
+          display: inline-flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+        }
+        .mdxeditor [role="toolbar"] button *,
+        .mdxeditor [role="toolbar"] [role="combobox"] *,
+        .mdxeditor [role="toolbar"] [data-toolbar-item] *,
+        .mdxeditor [class*="selectTrigger"] *,
+        .mdxeditor [role="toolbar"] button span,
+        .mdxeditor [role="toolbar"] span {
+          font-size: ${Math.max(10, cardSettings.editorToolbarHeight - 20)}px !important;
+          line-height: 1 !important;
+        }
+        .mdxeditor [role="toolbar"] button,
+        .mdxeditor [role="toolbar"] [role="combobox"] {
+          height: ${Math.max(16, cardSettings.editorToolbarHeight - 4)}px !important;
+          width: auto !important;
+          padding: 0 4px !important;
+          min-width: unset !important;
+          display: inline-flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+        }
+        .mdxeditor [role="toolbar"] button *,
+        .mdxeditor [role="toolbar"] [role="combobox"] * {
+          font-size: ${Math.max(10, cardSettings.editorToolbarHeight - 20)}px !important;
+          line-height: 1 !important;
+        }
+        .mdxeditor [role="toolbar"] button svg {
+          height: ${Math.max(10, cardSettings.editorToolbarHeight - 14)}px !important;
+          width: auto !important;
+        }
+        .mdxeditor [role="toolbar"] div[role="separator"] {
+          height: ${Math.max(10, cardSettings.editorToolbarHeight - 14)}px !important;
+          margin: 0 4px !important;
+        }
+        .mdxeditor .mdxeditor-select-content div,
+        .mdxeditor .mdxeditor-select-content span {
+          font-size: ${Math.max(10, cardSettings.editorToolbarHeight - 14)}px !important;
+          padding-top: 2px !important;
+          padding-bottom: 2px !important;
+          min-height: unset !important;
+        }
+        ` : ''}
+        
+        /* Source Mode Editor (CodeMirror) */
+        .mdxeditor-source-editor .cm-editor, .mdxeditor-source-editor .cm-scroller {
+          background-color: var(--vscode-editor-background) !important;
+          color: var(--vscode-editor-foreground) !important;
+          font-family: var(--vscode-editor-font-family, monospace) !important;
+          font-size: var(--vscode-editor-font-size, 14px) !important;
+        }
+        .mdxeditor-source-editor .cm-gutters {
+          background-color: var(--vscode-editor-background) !important;
+          color: var(--vscode-editorLineNumber-foreground, #858585) !important;
+          border-right: 1px solid var(--vscode-panel-border) !important;
+          font-family: var(--vscode-editor-font-family, monospace) !important;
+          font-size: var(--vscode-editor-font-size, 14px) !important;
+          ${cardSettings.showLineNumbersInRawMode === false ? 'display: none !important;' : ''}
+        }
+        .mdxeditor-source-editor .cm-activeLineGutter {
+          background-color: transparent !important;
+          color: var(--vscode-editorLineNumber-activeForeground, #c6c6c6) !important;
+        }
+        .mdxeditor-source-editor .cm-activeLine {
+          background-color: var(--vscode-editor-lineHighlightBackground, rgba(255, 255, 255, 0.05)) !important;
+        }
+      `}} />
       <Toolbar
         onOpenSettings={() => vscode.postMessage({ type: 'openSettings' })}
         onOpenColumnManager={() => setColumnManagerOpen(true)}
