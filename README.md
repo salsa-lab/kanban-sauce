@@ -170,21 +170,25 @@ Tailor Kanban Sauce under `kanban-sauce.*` in your editor settings:
 
 Contributions are welcome!
 
-**Prerequisites:** Node.js 18+ and `pnpm`.
+**Prerequisites:** Node.js 22+ and `pnpm`.
 
 ```bash
 pnpm install       # Install dependencies
 pnpm dev           # Start development (watch mode)
 pnpm build         # Build for production
 pnpm test          # Run unit and component tests
+pnpm lint          # Run ESLint
+pnpm typecheck     # Run TypeScript type checking
+pnpm package       # Package extension as a .vsix
 ```
 
 *See [CONTRIBUTING.md](CONTRIBUTING.md) for architecture and testing details.*
 
 ### Tech Stack
 
-- **Extension Host:** TypeScript, VS Code Extension API, esbuild
-- **Webview UI:** React 18, Vite, Tailwind CSS, Zustand, MDXEditor
+- **Extension Host:** TypeScript 6, VS Code Extension API, esbuild
+- **Webview UI:** React 19, Vite 7, Tailwind CSS 3, Zustand 5, MDXEditor 4, Lucide Icons
+- **Testing & Tooling:** Vitest 5, Testing Library, Mocha (`@vscode/test-electron`), ESLint 10
 
 ## Acknowledgements
 
