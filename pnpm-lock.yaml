@@ -8,7 +8,7 @@ overrides:
   brace-expansion@<1.1.21: '>=1.1.21'
   picomatch@<2.3.2: '>=2.3.2'
   postcss: ^8.5.32
-  postcss-selector-parser: '>=6.1.5'
+  postcss-selector-parser: ^6.1.5
   nanoid@<3.3.18: '>=3.3.18'
   source-map-js: '>=1.2.2'
   qs: '>=6.16.1'
@@ -3633,8 +3633,8 @@ packages:
     peerDependencies:
       postcss: ^8.5.32
 
-  postcss-selector-parser@7.2.0:
-    resolution: {integrity: sha512-Khh/tERVBn0I1499dvBSHY0pWJloMJWUxDsOBM0CCDPAcVZ10Jl2L1qy1f19uEX22spa8Mv7DCdEQJc0cGwBhQ==}
+  postcss-selector-parser@6.1.6:
+    resolution: {integrity: sha512-BK87/Qgti3DIcgS2PaCVoteFIkjIFvCJBizZDIVSjdlFNg4Jv+SRqbN2JONb/qQUH4ZFqfXYF+izg15W2HVRvA==}
     engines: {node: '>=4'}
 
   postcss-value-parser@4.2.0:
@@ -6253,7 +6253,7 @@ snapshots:
 
   '@tailwindcss/typography@0.5.20(tailwindcss@3.4.19(tsx@4.23.15))':
     dependencies:
-      postcss-selector-parser: 7.2.0
+      postcss-selector-parser: 6.1.6
       tailwindcss: 3.4.19(tsx@4.23.15)
 
   '@testing-library/dom@10.4.1':
@@ -8516,9 +8516,9 @@ snapshots:
   postcss-nested@6.2.0(postcss@8.5.32):
     dependencies:
       postcss: 8.5.32
-      postcss-selector-parser: 7.2.0
+      postcss-selector-parser: 6.1.6
 
-  postcss-selector-parser@7.2.0:
+  postcss-selector-parser@6.1.6:
     dependencies:
       util-deprecate: 1.0.2
 
@@ -8986,7 +8986,7 @@ snapshots:
       postcss-js: 4.1.0(postcss@8.5.32)
       postcss-load-config: 6.0.1(jiti@1.21.7)(postcss@8.5.32)(tsx@4.23.15)
       postcss-nested: 6.2.0(postcss@8.5.32)
-      postcss-selector-parser: 7.2.0
+      postcss-selector-parser: 6.1.6
       resolve: 1.22.11
       sucrase: 3.35.1
     transitivePeerDependencies:
