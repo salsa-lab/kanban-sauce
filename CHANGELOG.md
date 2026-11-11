@@ -22,11 +22,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Grouped Settings & Markdown Descriptions**: Organized all 26 extension settings into three ordered sections (Workflow & Defaults, Board & Card Appearance, and Typography) and enabled `markdownDescription` across all localized bundles (`en`, `es`, `pt`).
 - **Harmonized User-Facing "Card" Terminology**: Standardized all user-visible labels, commands, tooltips, and settings descriptions across English, Spanish, and Portuguese to consistently use **card** instead of **feature** (while preserving internal variable names and setting keys).
 - **Theme-Adaptive Code Block Styling**: Styled code blocks in the editor using VS Code's `--vscode-textCodeBlock-background` theme variable and a slightly smaller monospace font size for visual distinction.
-- **Documentation & Marketplace Metadata**: Expanded `README.md` with complete configuration tables and collapsible typography documentation, and updated `package.json` description, categories, and keywords.
+- **Webview Bundle Splitting & VSIX Optimization**: Migrated Vite configuration to ESM (`vite.config.mts`), split large webview vendor libraries into separate chunks under 300 kB, and updated `.vscodeignore` to exclude nested sourcemaps and development files—reducing the packaged `.vsix` size by ~75% (from ~2.75 MB to ~689 KB).
+- **Dependency & Toolchain Upgrades**: Upgraded runtime and development dependencies (including React 19, MDXEditor 4.5, Vite 7, Vitest 5, TypeScript 6, ESLint 10, and `@vscode/vsce` 4.1) and added transitive security overrides to resolve all known audit vulnerabilities.
+- **Documentation & Marketplace Metadata**: Expanded `README.md` and `CONTRIBUTING.md` with complete configuration tables, collapsible typography documentation, and updated development/testing guides, and refined `package.json` description, categories, and keywords.
 
 ### Fixed
 
 - **Angle-Bracket Autolink Preservation**: Fixed an MDXEditor parsing error where CommonMark autolinks (`<https://...>`, `<www.example.com>`, `<user@example.com>`) were misinterpreted as malformed JSX tags, preserving their `<...>` syntax on save.
+- **Raw Mode Cursor & Selection Contrast**: Overrode CodeMirror's default light-theme cursor and selection colors in the raw Markdown editor with VS Code's `--vscode-editorCursor-foreground` and `--vscode-editor-selectionBackground` theme variables so the blinking cursor and text selection remain clearly visible in both light and dark themes.
 - **Trailing Newline Preservation**: Preserved a single trailing newline (`\n`) when serializing card `.md` files so saving cards in the board does not strip POSIX trailing newlines.
 - **Editor Toolbar & Dropdown Styling**: Fixed oversized text in the toolbar's block-type selector dropdown and matched popup menu backgrounds to the active VS Code theme.
 - **Font-Size Fallback Consistency**: Aligned default fallback values for `fontSize*` settings across the extension, webview store, CSS variables, and localization descriptions.
