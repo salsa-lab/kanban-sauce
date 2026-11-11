@@ -5,7 +5,7 @@ All notable changes to the Kanban Sauce extension will be documented in this fil
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [2.2.0] - 2026-11-11
 
 ### Added
 
@@ -35,7 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Font-Size Fallback Consistency**: Aligned default fallback values for `fontSize*` settings across the extension, webview store, CSS variables, and localization descriptions.
 - **Command Palette Cleanup**: Removed duplicate sort entries and hid internal sidebar filter commands from the global Command Palette.
 
-## [2.1.0] - 2023-08-11
+## [2.1.0] - 2026-08-11
 
 ### Added
 
