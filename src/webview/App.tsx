@@ -557,6 +557,21 @@ function App(): React.JSX.Element {
         .mdxeditor-source-editor .cm-activeLine {
           background-color: var(--vscode-editor-lineHighlightBackground, rgba(255, 255, 255, 0.05)) !important;
         }
+        .mdxeditor-source-editor .cm-content {
+          caret-color: var(--vscode-editorCursor-foreground, var(--vscode-editor-foreground, #aeafad)) !important;
+        }
+        .mdxeditor-source-editor .cm-cursor,
+        .mdxeditor-source-editor .cm-dropCursor {
+          border-left-color: var(--vscode-editorCursor-foreground, var(--vscode-editor-foreground, #aeafad)) !important;
+        }
+        .mdxeditor-source-editor .cm-editor.cm-focused .cm-selectionBackground,
+        .mdxeditor-source-editor .cm-selectionBackground,
+        .mdxeditor-source-editor .cm-content ::selection {
+          background-color: var(--vscode-editor-selectionBackground, rgba(38, 79, 120, 0.5)) !important;
+        }
+        .mdxeditor-source-editor .cm-selectionMatch {
+          background-color: var(--vscode-editor-selectionHighlightBackground, rgba(173, 214, 255, 0.15)) !important;
+        }
       `}} />
       <Toolbar
         onOpenSettings={() => vscode.postMessage({ type: 'openSettings' })}
