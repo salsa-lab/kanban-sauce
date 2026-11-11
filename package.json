@@ -2,7 +2,7 @@
   "name": "kanban-sauce",
   "displayName": "Kanban Sauce",
   "description": "A flexible, local-first Kanban board for your editor. Manage projects, tasks, notes, and ideas with Markdown files you own and version-control.",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "packageManager": "pnpm@11.20.0",
   "publisher": "salsa-lab",
   "license": "MIT",
