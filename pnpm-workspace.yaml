@@ -2,3 +2,34 @@ allowBuilds:
   '@vscode/vsce-sign': false
   esbuild: false
   keytar: false
+overrides:
+  'brace-expansion@<1.1.21': '>=1.1.21'
+  'picomatch@<2.3.2': '>=2.3.2'
+  postcss: '^8.5.32'
+  postcss-selector-parser: '^6.1.5'
+  'nanoid@<3.3.18': '>=3.3.18'
+  source-map-js: '>=1.2.2'
+  qs: '>=6.16.1'
+  esbuild: '^0.28.2'
+  '@babel/core': '>=7.29.1'
+  browserslist: '>=4.28.7'
+  'zod@>=4.0.0 <4.6.6': '>=4.6.6'
+  'glob@>=9.0.0 <=14.0.1': '>=14.0.2'
+  'minimatch@>=7.0.0 <11.0.1': '>=11.0.1'
+packageExtensions:
+  eslint-plugin-react:
+    peerDependencies:
+      eslint: '^3 || ^4 || ^5 || ^6 || ^7 || ^8 || ^9.7 || ^10.0.0'
+minimumReleaseAgeExclude:
+  - '@typescript-eslint/eslint-plugin@8.72.2'
+  - '@typescript-eslint/parser@8.72.2'
+  - '@typescript-eslint/project-service@8.72.2'
+  - '@typescript-eslint/scope-manager@8.72.2'
+  - '@typescript-eslint/tsconfig-utils@8.72.2'
+  - '@typescript-eslint/type-utils@8.72.2'
+  - '@typescript-eslint/types@8.72.2'
+  - '@typescript-eslint/typescript-estree@8.72.2'
+  - '@typescript-eslint/utils@8.72.2'
+  - '@typescript-eslint/visitor-keys@8.72.2'
+  - lucide-react@1.71.0
+  - typescript-eslint@8.72.2

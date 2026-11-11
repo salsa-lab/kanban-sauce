@@ -344,10 +344,25 @@ export function FeatureEditor({
   const priorityLabels = getPriorityLabels()
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const currentFrontmatterRef = useRef(currentFrontmatter)
-  currentFrontmatterRef.current = currentFrontmatter
+  useEffect(() => {
+    currentFrontmatterRef.current = currentFrontmatter
+  }, [currentFrontmatter])
 
   const [localContent, setLocalContent] = useState(content || '')
   const editorRef = useRef<MDXEditorMethods>(null)
+  const [prevKey, setPrevKey] = useState(`${featureId}-${contentVersion}`)
+  const [prevFrontmatter, setPrevFrontmatter] = useState(frontmatter)
+
+  const currentKey = `${featureId}-${contentVersion}`
+  if (currentKey !== prevKey) {
+    setPrevKey(currentKey)
+    setLocalContent(content || '')
+  }
+
+  if (frontmatter !== prevFrontmatter) {
+    setPrevFrontmatter(frontmatter)
+    setCurrentFrontmatter(frontmatter)
+  }
   
   const [isDark, setIsDark] = useState(() => document.documentElement.classList.contains('dark'))
   useEffect(() => {
@@ -382,15 +397,9 @@ export function FeatureEditor({
 
   // Set content when a new feature is opened
   useEffect(() => {
-    setLocalContent(content || '')
     editorRef.current?.setMarkdown(content || '')
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [featureId, contentVersion])
-
-  // Reset frontmatter when prop changes
-  useEffect(() => {
-    setCurrentFrontmatter(frontmatter)
-  }, [frontmatter])
 
   const handleFrontmatterUpdate = useCallback(
     (updates: Partial<FeatureFrontmatter>) => {

@@ -19,7 +19,7 @@ export default tseslint.config(
       }
     },
     settings: {
-      react: { version: 'detect' }
+      react: { version: '19' }
     },
     rules: {
       ...react.configs.recommended.rules,
